@@ -20,7 +20,6 @@ function getItem(
     label,
   } as MenuItem;
 }
-
 const items: MenuItem[] = [getItem("LG U+", "1", <PieChartOutlined />)];
 
 interface DataType {
@@ -30,37 +29,6 @@ interface DataType {
   endIdx: number;
   total: number;
 }
-
-const columns: TableProps<DataType>["columns"] = [
-  // {
-  //   title: "Name",
-  //   dataIndex: "name",
-  //   // render: (text) => <a>{text}</a>,
-  //   render: () => <Input placeholder="Borderless" variant="borderless" />,
-  // },
-  // {
-  //   title: "Cash Assets",
-  //   className: "column-money",
-  //   dataIndex: "money",
-  //   align: "right",
-  // },
-  {
-    title: "문의 카테고리",
-    dataIndex: "category",
-  },
-  {
-    title: "시작 IDX",
-    dataIndex: "startIdx",
-  },
-  {
-    title: "끝 IDX",
-    dataIndex: "endIdx",
-  },
-  {
-    title: "문의 건 수",
-    dataIndex: "total",
-  },
-];
 
 const data: DataType[] = [
   {
@@ -95,10 +63,70 @@ const data: DataType[] = [
 ];
 
 function App() {
-  const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);
+  const [tableData, setTableData] = useState<DataType[]>(data);
+
+  const handleInputChange = (
+    key: string,
+    field: "startIdx" | "endIdx",
+    value: number
+  ) => {
+    setTableData((prevData) =>
+      prevData.map((item) =>
+        item.key === key
+          ? {
+              ...item,
+              [field]: value,
+              total: field === "endIdx" ? value - item.startIdx + 1 : 0,
+            }
+          : item
+      )
+    );
+  };
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "문의 카테고리",
+      dataIndex: "category",
+    },
+    {
+      title: "시작 Index",
+      dataIndex: "startIdx",
+      align: "right",
+      render: (value, record) => (
+        <Input
+          variant="borderless"
+          placeholder="0"
+          onChange={(e) =>
+            handleInputChange(record.key, "startIdx", Number(e.target.value))
+          }
+        />
+      ),
+    },
+    {
+      title: "끝 Index",
+      dataIndex: "endIdx",
+      align: "right",
+      render: (value, record) => (
+        <Input
+          variant="borderless"
+          placeholder="0"
+          onChange={(e) =>
+            handleInputChange(record.key, "endIdx", Number(e.target.value))
+          }
+        />
+      ),
+    },
+    {
+      title: "문의 건 수",
+      dataIndex: "total",
+      align: "right",
+    },
+  ];
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -126,7 +154,7 @@ function App() {
           >
             <Table<DataType>
               columns={columns}
-              dataSource={data}
+              dataSource={tableData}
               bordered
               title={() => "LG U+ Jira/Confluence 기술지원 운영 통계"}
               footer={() => (
