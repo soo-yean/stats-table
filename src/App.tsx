@@ -160,7 +160,7 @@ function App() {
               footer={() => (
                 <Flex justify="space-between">
                   <p>total</p>
-                  <p>xxx</p>
+                  <p>{tableData.reduce((sum, item) => sum + item.total, 0)}</p>
                 </Flex>
               )}
             />
