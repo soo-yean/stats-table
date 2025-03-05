@@ -96,7 +96,7 @@ function App() {
       title: "시작 Index",
       dataIndex: "startIdx",
       align: "right",
-      render: (value, record) => (
+      render: (_value, record) => (
         <Input
           variant="borderless"
           placeholder="0"
@@ -110,7 +110,7 @@ function App() {
       title: "끝 Index",
       dataIndex: "endIdx",
       align: "right",
-      render: (value, record) => (
+      render: (_value, record) => (
         <Input
           variant="borderless"
           placeholder="0"
