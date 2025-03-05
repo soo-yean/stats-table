@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { PieChartOutlined } from "@ant-design/icons";
 import type { MenuProps, TableProps } from "antd";
-import { Flex, Layout, Menu, Table, Input, theme } from "antd";
+import { Flex, Layout, Menu, Table, Input, theme, Button } from "antd";
 
 const { Content, Footer, Sider } = Layout;
 
@@ -100,6 +100,7 @@ function App() {
         <Input
           variant="borderless"
           placeholder="0"
+          value={record.startIdx}
           onChange={(e) =>
             handleInputChange(record.key, "startIdx", Number(e.target.value))
           }
@@ -114,6 +115,7 @@ function App() {
         <Input
           variant="borderless"
           placeholder="0"
+          value={record.endIdx}
           onChange={(e) =>
             handleInputChange(record.key, "endIdx", Number(e.target.value))
           }
@@ -152,18 +154,23 @@ function App() {
               borderRadius: borderRadiusLG,
             }}
           >
-            <Table<DataType>
-              columns={columns}
-              dataSource={tableData}
-              bordered
-              title={() => "LG U+ Jira/Confluence 기술지원 운영 통계"}
-              footer={() => (
-                <Flex justify="space-between">
-                  <p>total</p>
-                  <p>{tableData.reduce((sum, item) => sum + item.total, 0)}</p>
-                </Flex>
-              )}
-            />
+            <Flex vertical gap={3}>
+              <Button onClick={() => setTableData([...data])}>RESET</Button>
+              <Table<DataType>
+                columns={columns}
+                dataSource={tableData}
+                bordered
+                title={() => "LG U+ Jira/Confluence 기술지원 운영 통계"}
+                footer={() => (
+                  <Flex justify="space-between">
+                    <p>total</p>
+                    <p>
+                      {tableData.reduce((sum, item) => sum + item.total, 0)}
+                    </p>
+                  </Flex>
+                )}
+              />
+            </Flex>
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
