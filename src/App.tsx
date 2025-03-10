@@ -98,11 +98,14 @@ function App() {
       align: "right",
       render: (_value, record) => (
         <Input
-          variant="borderless"
-          placeholder="0"
-          value={record.startIdx}
+          variant="filled"
+          value={record.startIdx === 0 ? "" : record.startIdx}
           onChange={(e) =>
-            handleInputChange(record.key, "startIdx", Number(e.target.value))
+            handleInputChange(
+              record.key,
+              "startIdx",
+              Number(e.target.value) || 0
+            )
           }
         />
       ),
@@ -113,11 +116,10 @@ function App() {
       align: "right",
       render: (_value, record) => (
         <Input
-          variant="borderless"
-          placeholder="0"
-          value={record.endIdx}
+          variant="filled"
+          value={record.endIdx === 0 ? "" : record.endIdx}
           onChange={(e) =>
-            handleInputChange(record.key, "endIdx", Number(e.target.value))
+            handleInputChange(record.key, "endIdx", Number(e.target.value) || 0)
           }
         />
       ),
