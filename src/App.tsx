@@ -69,6 +69,11 @@ function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [tableData, setTableData] = useState<DataType[]>(data);
 
+  const getTotalValue = (val: number) => {
+    if (val < 0) return 0;
+    else return val;
+  };
+
   const handleInputChange = (
     key: string,
     field: "startIdx" | "endIdx",
@@ -80,7 +85,11 @@ function App() {
           ? {
               ...item,
               [field]: value,
-              total: field === "endIdx" ? value - item.startIdx + 1 : 0,
+              // total: field === "endIdx" ? value - item.startIdx + 1 : 0,
+              total:
+                field === "endIdx"
+                  ? getTotalValue(value - item.startIdx + 1)
+                  : 0,
             }
           : item
       )
