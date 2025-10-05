@@ -75,16 +75,14 @@ function App() {
     value: number
   ) => {
     setTableData((prevData) =>
-      prevData.map((item) =>
-        item.key === key
-          ? {
-              ...item,
-              [field]: value,
-              total:
-                field === "endIdx" ? Math.max(value - item.startIdx + 1, 0) : 0,
-            }
-          : item
-      )
+      prevData.map((item) => {
+        if (item.key !== key) return item;
+
+        const updated = { ...item, [field]: value };
+        const total = Math.max(updated.endIdx - updated.startIdx + 1, 0);
+
+        return { ...updated, total };
+      })
     );
   };
 
