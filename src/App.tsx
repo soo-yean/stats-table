@@ -25,8 +25,8 @@ const items: MenuItem[] = [getItem("LG U+", "1", <PieChartOutlined />)];
 interface DataType {
   key: string;
   category: string;
-  startIdx: number;
-  endIdx: number;
+  startIdx: number | undefined;
+  endIdx: number | undefined;
   total: number;
 }
 
@@ -72,16 +72,23 @@ function App() {
   const handleInputChange = (
     key: string,
     field: "startIdx" | "endIdx",
-    value: number
+    value?: number
   ) => {
     setTableData((prevData) =>
       prevData.map((item) => {
         if (item.key !== key) return item;
 
         const updated = { ...item, [field]: value };
-        const total = Math.max(updated.endIdx - updated.startIdx + 1, 0);
 
-        return { ...updated, total };
+        const calculateTotal = (start?: number, end?: number) => {
+          if (start === undefined || end === undefined) return 0;
+          return end >= start ? end - start + 1 : 0;
+        };
+
+        return {
+          ...updated,
+          total: calculateTotal(updated.startIdx, updated.endIdx),
+        };
       })
     );
   };
@@ -98,14 +105,15 @@ function App() {
       render: (_value, record) => (
         <Input
           variant="filled"
-          value={record.startIdx === 0 ? "" : record.startIdx}
-          onChange={(e) =>
+          value={record.startIdx ?? ""}
+          onChange={(e) => {
+            const val = e.target.value;
             handleInputChange(
               record.key,
               "startIdx",
-              Number(e.target.value) || 0
-            )
-          }
+              val === "" ? undefined : Number(val)
+            );
+          }}
         />
       ),
     },
@@ -116,10 +124,15 @@ function App() {
       render: (_value, record) => (
         <Input
           variant="filled"
-          value={record.endIdx === 0 ? "" : record.endIdx}
-          onChange={(e) =>
-            handleInputChange(record.key, "endIdx", Number(e.target.value) || 0)
-          }
+          value={record.endIdx ?? ""}
+          onChange={(e) => {
+            const val = e.target.value;
+            handleInputChange(
+              record.key,
+              "endIdx",
+              val === "" ? undefined : Number(val)
+            );
+          }}
         />
       ),
     },
